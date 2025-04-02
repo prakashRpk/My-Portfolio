@@ -1,0 +1,103 @@
+.projects{
+    padding-top:30px ;
+    text-align: center;
+    color: white;
+    width: 1366px;
+    height: 650px;
+
+}
+.projects .screen{
+    background-color: rgba(255, 252, 252, 0.13);
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    margin-left:10% ;
+    padding: 10px 0px;
+    -webkit-box-shadow: 0px -1px 37px 8px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px -1px 37px 8px rgba(0,0,0,0.75);
+box-shadow: 0px -1px 37px 8px rgba(0,0,0,0.75);
+}
+.skills-taps{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    overflow-y: hidden;
+
+}
+.container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    color: black;
+    gap: 100px 50px;
+    padding: 100px 50px;
+}
+.container .card{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+    height: 300px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.15);
+    transition: 0.5s;
+}
+.container .card:hover{
+    height: 400px;
+}
+.container .card .imgBX{
+    position: absolute;
+    top: 20px;
+    width: 300px;
+    height: 220px;
+    background-color: black;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.5s;
+}
+.container .card:hover .imgBX{
+    top: -100px;
+    scale: 0.75;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+}
+.container .card .imgBX img{
+    position:absolute;
+    top: 0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.container .card .content{
+    position: absolute;
+    width: 100%;
+    padding:0 30px;
+    top: 222px;
+    height: 65px;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+.container .card:hover .content{
+    top: 130px;
+    height: 250px;
+}
+.container .card .content a{
+    position: absolute;
+    margin-left: -50px;
+    margin-top: 50px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: white;
+    background-color: #545454;
+}
+.container h2{
+    font-weight: 900;
+}
+

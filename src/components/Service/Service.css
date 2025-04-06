@@ -1,0 +1,53 @@
+#Service{
+    position: absolute;
+    top: 10%;
+    height: 80%;
+    width: 90%;
+    left: 5%;
+    color: white;
+    background: rgba( 255, 255, 255, 0 ) !important;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    overflow-x: hidden;
+}
+#Service > h1{
+    margin-left: 40%;
+}
+#Service > form{
+    position: relative;
+    top: 5%;
+    /* background-color: black; */
+    width: 40%;
+    left: 25%;
+}
+#Service > form >label{
+    font-size: 20px;
+}
+#Service > form input,textarea,select{
+    margin-bottom: 20px;
+    border: 1px solid cyan;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    padding: 5px;
+    width: 100%;
+    resize: none;
+}
+#Service option{
+    background-color: transparent;
+    color: black;
+}
+#Service .btn:hover{
+    background-color: cyan;
+    color: #000;
+}
+@media screen and (max-width: 768px)
+{
+    #Service > form{
+        width: 60%;
+        left: 20%;
+    }
+}

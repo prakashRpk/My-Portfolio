@@ -1,0 +1,42 @@
+[
+  { 
+    "id": 1, 
+    "title": "Online Diary", 
+    "category": "MERN Stack", 
+    "desc": "A secure personal journal application featuring full CRUD operations, JWT authentication, and bcrypt for data privacy.",
+    "tech": ["Node.js", "Express.js", "MongoDB", "React", "JWT"],
+    "live": "#",
+    "github": "https://github.com/prakashRpk",
+    "imgKey": "p1"
+  },
+  { 
+    "id": 2, 
+    "title": "Restaurant E-commerce", 
+    "category": "MERN Stack", 
+    "desc": "A full-stack ordering platform with a dynamic menu and user authentication.",
+    "tech": ["React", "Node.js", "MongoDB", "Express.js"],
+    "live": "#",
+    "github": "https://github.com/prakashRpk",
+    "imgKey": "p2"
+  },
+  { 
+    "id": 3, 
+    "title": "Banking Application", 
+    "category": "MERN Stack", 
+    "desc": "A secure banking system with transaction management and secure login features.",
+    "tech": ["MongoDB", "Express", "React", "Node"],
+    "live": "#",
+    "github": "https://github.com/prakashRpk",
+    "imgKey": "p3"
+  },
+  { 
+    "id": 4, 
+    "title": "Portfolio Website", 
+    "category": "React.js", 
+    "desc": "A responsive personal portfolio built with React.js showcasing skills, projects, and background with smooth navigation.",
+    "tech": ["React", "CSS", "Framer Motion"],
+    "live": "#",
+    "github": "https://github.com/prakashRpk",
+    "imgKey": "p1"
+  }
+]

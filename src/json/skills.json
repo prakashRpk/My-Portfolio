@@ -1,0 +1,22 @@
+{
+  "row1": [
+    { "name": "JavaScript", "icon": "JS" },
+    { "name": "React.js", "icon": "RE" },
+    { "name": "Node.js", "icon": "NO" },
+    { "name": "Express.js", "icon": "EX" },
+    { "name": "MongoDB", "icon": "DB" },
+    { "name": "Figma", "icon": "FI" },
+    { "name": "C++", "icon": "C+" },
+    { "name": "HTML5", "icon": "H5" }
+  ],
+  "row2": [
+    { "name": "Git", "icon": "GT" },
+    { "name": "GitHub", "icon": "GH" },
+    { "name": "REST API", "icon": "AP" },
+    { "name": "Adobe XD", "icon": "XD" },
+    { "name": "SQL", "icon": "SQ" },
+    { "name": "Postman", "icon": "PM" },
+    { "name": "Firebase", "icon": "FB" },
+    { "name": "CSS3", "icon": "C3" }
+  ]
+}

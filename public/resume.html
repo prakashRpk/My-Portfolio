@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prakash R - Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-color: #000;
+            --accent-color: #DFFF00; /* Neon Yellow/Green */
+            --text-color: #fff;
+            --muted-color: #aaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .resume-page {
+            width: 800px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Halftone Dot Decoration */
+        .dots-top {
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 300px;
+            height: 300px;
+            background-image: radial-gradient(var(--accent-color) 2px, transparent 2px);
+            background-size: 20px 20px;
+            opacity: 0.2;
+            border-radius: 50%;
+        }
+
+        .dots-bottom {
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 400px;
+            background-image: radial-gradient(var(--accent-color) 2px, transparent 2px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid #1a1a1a;
+            overflow: hidden;
+            background-color: #222;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        .header-text {
+            text-align: right;
+        }
+
+        .header-text h1 {
+            font-size: 80px;
+            font-weight: 900;
+            line-height: 0.8;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .header-text h1 .first-name { color: var(--accent-color); }
+        .header-text h1 .last-name { color: #fff; }
+
+        .role-pill {
+            background-color: var(--accent-color);
+            color: #000;
+            padding: 8px 30px;
+            border-radius: 100px;
+            display: inline-block;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            border: 2px solid var(--accent-color);
+            padding: 8px 25px;
+            border-radius: 100px;
+            display: inline-block;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 16px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        p, li {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #eee;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .education-item, .exp-item {
+            margin-bottom: 20px;
+        }
+
+        .education-item h4, .exp-item h4 {
+            color: var(--accent-color);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .education-item p:first-of-type, .exp-item p.date {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .contacts-list {
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .contact-item .icon {
+            color: var(--accent-color);
+            font-size: 18px;
+            width: 20px;
+        }
+
+        @media print {
+            body { padding: 0; }
+            .resume-page { width: 100%; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-page">
+        <div class="dots-top"></div>
+        <div class="dots-bottom"></div>
+
+        <header>
+            <div class="profile-pic">
+                <img src="https://via.placeholder.com/180/222222/FFFFFF?text=PRAKASH" alt="Profile">
+            </div>
+            <div class="header-text">
+                <h1>
+                    <span class="first-name">PRAKASH</span><br>
+                    <span class="last-name">R</span>
+                </h1>
+                <div class="role-pill">Full-Stack Developer</div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-col">
+                <section>
+                    <div class="section-title">Objectives</div>
+                    <p>Dedicated full-stack developer with a passion for crafting user-friendly and scalable web applications. Proficient in MERN stack and committed to modern engineering standards.</p>
+                </section>
+
+                <section>
+                    <div class="section-title">Education</div>
+                    <div class="education-item">
+                        <h4>Master of Computer Applications</h4>
+                        <p>Hindusthan College of Arts and Science | 2023 - Present</p>
+                        <p>Currently securing 91% academic standing.</p>
+                    </div>
+                    <div class="education-item">
+                        <h4>Bachelor of Science in Computer Science</h4>
+                        <p>Bharathiar University | 2020 - 2023</p>
+                        <p>Project excellence and core CS fundamentals.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="section-title">Skills</div>
+                    <ul>
+                        <li>JavaScript (ES6+), Node.js, Express.js</li>
+                        <li>React.js, MERN Stack Architecture</li>
+                        <li>MongoDB, SQL, Firebase</li>
+                        <li>C, C++, HTML5, CSS3, EJS</li>
+                        <li>Figma, Adobe XD, UI/UX Design</li>
+                        <li>Git, GitHub, RESTful APIs</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <div class="section-title">Languages</div>
+                    <p>English: Fluent (EF SET C2)</p>
+                    <p>Tamil: Native</p>
+                </section>
+            </div>
+
+            <div class="right-col">
+                <section>
+                    <div class="section-title">Projects</div>
+                    <div class="exp-item">
+                        <h4>Online Diary Application</h4>
+                        <p class="date">MERN Stack | 2024</p>
+                        <ul>
+                            <li>Secured authentication with JWT and Bcrypt.</li>
+                            <li>Implemented full CRUD for personal journals.</li>
+                            <li>Optimized MongoDB schema for fast retrieval.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-item">
+                        <h4>Restaurant E-commerce Platform</h4>
+                        <p class="date">Full-Stack | 2024</p>
+                        <ul>
+                            <li>Responsive ordering system for food items.</li>
+                            <li>Real-time cart management and dynamic menu.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-item">
+                        <h4>Banking Management System</h4>
+                        <p class="date">MERN Stack | 2023</p>
+                        <ul>
+                            <li>Secure transaction logic and account overview.</li>
+                            <li>User-friendly financial dashboard design.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="section-title">Contacts</div>
+                    <div class="contacts-list">
+                        <div class="contact-item">
+                            <span class="icon">📍</span>
+                            <span>Chennai, Tamil Nadu, India</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">📞</span>
+                            <span>+91 98765 43210</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">✉</span>
+                            <span>prakash.dev@example.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">🌐</span>
+                            <span>github.com/prakashRpk</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

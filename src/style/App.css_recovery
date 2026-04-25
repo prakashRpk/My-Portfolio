@@ -1,0 +1,27 @@
+.portfolio-container {
+  display: flex;
+  min-height: 100vh;
+  padding: 8rem 3rem 4rem;
+  gap: 3rem;
+  max-width: 1800px;
+  width: 100%;
+  margin: 0 auto;
+  align-items: center;
+}
+
+/* About Section */
+.about-section {
+  padding: 8rem 3rem;
+  background-color: var(--bg-color);
+  border-top: 1px solid rgba(255, 25, 255, 0.05);
+}
+
+.about-container {
+  max-width: 1800px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 6rem;
+  align-items: start;
+}

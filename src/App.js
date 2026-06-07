@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './style/App.css';
-import Sidebar from './components/Sidebar';
 import HeroSection from './components/HeroSection';
 import Navbar from './components/Navbar';
 import AboutSection from './components/AboutSection';
@@ -9,6 +8,9 @@ import AchievementSection from './components/AchievementSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
+import ChatbotWidget from './components/ChatbotWidget';
+import CustomCursor from './components/CustomCursor';
+import MouseTrail from './components/MouseTrail';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -19,9 +21,10 @@ function App() {
       
       {!loading && (
         <>
+          <CustomCursor />
+          <MouseTrail />
           <Navbar />
           <div className="portfolio-container">
-            <Sidebar />
             <HeroSection />
           </div>
           <AboutSection />
@@ -29,6 +32,7 @@ function App() {
           <AchievementSection />
           <ContactSection />
           <Footer />
+          <ChatbotWidget />
         </>
       )}
     </>

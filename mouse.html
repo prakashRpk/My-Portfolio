@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particle Trail Styles</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #050505; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: monospace; }
+#wrap { width: 900px; max-width: 100vw; }
+#toolbar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 12px; background: #0a0a0a;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #222;
+}
+.btn {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid #333;
+  background: #111; color: #888; font-size: 12px; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.2s; font-family: monospace;
+}
+.btn:hover { border-color: #555; color: #ccc; }
+.btn.active { border-color: var(--ac); color: var(--ac); background: #1a1a1a;
+  box-shadow: 0 0 8px var(--ac-glow); }
+#arena {
+  width: 100%; height: 560px;
+  background: #080808; cursor: none;
+  overflow: hidden; position: relative;
+  border-radius: 0 0 12px 12px;
+}
+#hint {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff22; font-family: monospace; font-size: 13px;
+  letter-spacing: 3px; text-align: center; pointer-events: none;
+  transition: opacity 0.5s;
+}
+canvas { position: absolute; top:0; left:0; width:100%; height:100%; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="toolbar">
+  <button class="btn active" data-mode="fire" style="--ac:#ff6a00;--ac-glow:#ff6a0044">🔥 FIRE</button>
+  <button class="btn" data-mode="matrix" style="--ac:#00ff41;--ac-glow:#00ff4144">💚 MATRIX</button>
+  <button class="btn" data-mode="galaxy" style="--ac:#c084fc;--ac-glow:#c084fc44">🌌 GALAXY</button>
+  <button class="btn" data-mode="electric" style="--ac:#facc15;--ac-glow:#facc1544">⚡ ELECTRIC</button>
+  <button class="btn" data-mode="ink" style="--ac:#e0e0e0;--ac-glow:#e0e0e044">🖋 INK</button>
+  <button class="btn" data-mode="rainbow" style="--ac:#ff79c6;--ac-glow:#ff79c644">🌈 RAINBOW</button>
+</div>
+<div id="arena">
+  <div id="hint">MOVE MOUSE TO PAINT</div>
+  <canvas id="c"></canvas>
+</div>
+</div>
+
+<script>
+const arena = document.getElementById('arena');
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hint = document.getElementById('hint');
+
+let W, H, mode = 'fire', frame = 0, active = false;
+let mouse = {x:-999,y:-999,px:-999,py:-999};
+let trail = [], particles = [];
+
+function resize() {
+  const r = arena.getBoundingClientRect();
+  W = canvas.width = r.width; H = canvas.height = r.height;
+}
+resize(); window.addEventListener('resize', resize);
+
+document.querySelectorAll('.btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    mode = b.dataset.mode;
+    trail = []; particles = [];
+    ctx.clearRect(0,0,W,H);
+  });
+});
+
+arena.addEventListener('mouseenter', () => { active=true; hint.style.opacity='0'; });
+arena.addEventListener('mouseleave', () => {
+  active=false;
+  setTimeout(()=>{ if(!active) hint.style.opacity='1'; },1500);
+});
+arena.addEventListener('mousemove', e => {
+  const r = arena.getBoundingClientRect();
+  mouse.px = mouse.x; mouse.py = mouse.y;
+  mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  if(active) spawnParticles();
+  trail.push({x:mouse.x, y:mouse.y, t:frame});
+  if(trail.length > 80) trail.shift();
+});
+
+function spawnParticles() {
+  const dx = mouse.x - mouse.px, dy = mouse.y - mouse.py;
+  const speed = Math.sqrt(dx*dx+dy*dy);
+  const n = Math.min(Math.floor(speed/2)+2, 12);
+  for(let i=0;i<n;i++) {
+    const p = {x:mouse.x, y:mouse.y, life:1, maxLife:1};
+    if(mode==='fire') {
+      const h = 20+Math.random()*40;
+      p.color = `hsl(${h},100%,${50+Math.random()*30}%)`;
+      p.vx = (Math.random()-0.5)*3; p.vy = -2-Math.random()*4;
+      p.size = 3+Math.random()*5; p.maxLife = 0.6+Math.random()*0.4;
+      p.decay = 0.04+Math.random()*0.03;
+    } else if(mode==='matrix') {
+      p.char = String.fromCharCode(0x30A0+Math.floor(Math.random()*96));
+      p.color = `hsl(${120+Math.random()*20},100%,${50+Math.random()*30}%)`;
+      p.vx = (Math.random()-0.5)*1.5; p.vy = 1+Math.random()*4;
+      p.size = 10+Math.random()*6; p.maxLife = 0.8+Math.random()*0.5;
+      p.decay = 0.025+Math.random()*0.02;
+    } else if(mode==='galaxy') {
+      const h = 260+Math.random()*80;
+      p.color = `hsl(${h},80%,${60+Math.random()*30}%)`;
+      p.vx = (Math.random()-0.5)*4; p.vy = (Math.random()-0.5)*4;
+      p.size = 1+Math.random()*3; p.maxLife = 1+Math.random()*0.5;
+      p.decay = 0.015+Math.random()*0.015; p.type='star';
+      p.spin = (Math.random()-0.5)*0.3;
+    } else if(mode==='electric') {
+      p.color = `hsl(${45+Math.random()*30},100%,${70+Math.random()*30}%)`;
+      p.vx = (Math.random()-0.5)*6; p.vy = (Math.random()-0.5)*6;
+      p.size = 1+Math.random()*2; p.maxLife = 0.4+Math.random()*0.3;
+      p.decay = 0.06+Math.random()*0.04; p.type='bolt';
+      p.ex = mouse.x+(Math.random()-0.5)*40;
+      p.ey = mouse.y+(Math.random()-0.5)*40;
+    } else if(mode==='ink') {
+      p.color = `rgba(${200+Math.random()*55},${200+Math.random()*55},${200+Math.random()*55},`;
+      p.vx = (Math.random()-0.5)*2; p.vy = (Math.random()-0.5)*2+0.5;
+      p.size = 2+Math.random()*8; p.maxLife = 0.8+Math.random()*0.6;
+      p.decay = 0.012+Math.random()*0.01; p.type='blob';
+    } else if(mode==='rainbow') {
+      p.hue = frame*3 + i*20;
+      p.color = `hsl(${p.hue},100%,60%)`;
+      p.vx = (Math.random()-0.5)*3; p.vy = (Math.random()-0.5)*3;
+      p.size = 2+Math.random()*5; p.maxLife = 0.7+Math.random()*0.5;
+      p.decay = 0.025+Math.random()*0.02;
+    }
+    particles.push(p);
+  }
+}
+
+function drawCursor() {
+  if(mouse.x<0) return;
+  const configs = {
+    fire:     {c:'#ff6a00', r:10},
+    matrix:   {c:'#00ff41', r:8},
+    galaxy:   {c:'#c084fc', r:10},
+    electric: {c:'#facc15', r:12},
+    ink:      {c:'#e0e0e0', r:8},
+    rainbow:  {c:`hsl(${frame*3},100%,65%)`, r:10}
+  };
+  const cfg = configs[mode];
+  const pulse = 0.5+0.5*Math.sin(frame*0.12);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(mouse.x,mouse.y,cfg.r*pulse,0,Math.PI*2);
+  ctx.strokeStyle = cfg.c+'88'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(mouse.x,mouse.y,2.5,0,Math.PI*2);
+  ctx.fillStyle = cfg.c; ctx.fill();
+  ctx.restore();
+}
+
+function drawParticle(p) {
+  const alpha = p.life/p.maxLife;
+  ctx.save();
+  if(mode==='fire') {
+    ctx.globalAlpha = alpha;
+    const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*1.5);
+    g.addColorStop(0,p.color); g.addColorStop(1,'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*1.5,0,Math.PI*2); ctx.fill();
+  } else if(mode==='matrix') {
+    ctx.globalAlpha = alpha*0.9;
+    ctx.fillStyle = p.color;
+    ctx.font = `bold ${p.size}px monospace`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor=p.color; ctx.shadowBlur=8;
+    ctx.fillText(p.char, p.x, p.y);
+  } else if(mode==='galaxy') {
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = p.color;
+    ctx.shadowColor=p.color; ctx.shadowBlur=6;
+    ctx.beginPath();
+    for(let k=0;k<5;k++) {
+      const a = (k*4*Math.PI/5)+p.spin*frame;
+      const a2 = a+Math.PI/5;
+      ctx.lineTo(p.x+Math.cos(a)*p.size, p.y+Math.sin(a)*p.size);
+      ctx.lineTo(p.x+Math.cos(a2)*p.size*0.4, p.y+Math.sin(a2)*p.size*0.4);
+    }
+    ctx.closePath(); ctx.fill();
+  } else if(mode==='electric') {
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = p.color; ctx.lineWidth=1.5;
+    ctx.shadowColor=p.color; ctx.shadowBlur=10;
+    ctx.beginPath(); ctx.moveTo(p.x,p.y);
+    let cx=p.x, cy=p.y;
+    const steps=4;
+    for(let s=0;s<steps;s++) {
+      const nx = cx+(p.ex-p.x)/steps + (Math.random()-0.5)*15;
+      const ny = cy+(p.ey-p.y)/steps + (Math.random()-0.5)*15;
+      ctx.lineTo(nx,ny); cx=nx; cy=ny;
+    }
+    ctx.stroke();
+  } else if(mode==='ink') {
+    ctx.globalAlpha = alpha*0.4;
+    ctx.fillStyle = p.color+(alpha*0.5)+')';
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+  } else if(mode==='rainbow') {
+    ctx.globalAlpha = alpha;
+    const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*2);
+    g.addColorStop(0,`hsla(${p.hue},100%,80%,1)`);
+    g.addColorStop(1,`hsla(${p.hue},100%,50%,0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*2,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawTrailLine() {
+  if(trail.length < 3) return;
+  if(mode==='fire'||mode==='ink') return;
+  const colors = {matrix:'#00ff4122',galaxy:'#c084fc22',electric:'#facc1522',rainbow:'rgba(255,255,255,0.06)'};
+  const col = colors[mode];
+  if(!col) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(trail[0].x,trail[0].y);
+  for(let i=1;i<trail.length;i++) ctx.lineTo(trail[i].x,trail[i].y);
+  ctx.strokeStyle=col; ctx.lineWidth=2; ctx.stroke();
+  ctx.restore();
+}
+
+function loop() {
+  frame++;
+  const fades = {fire:0.18,matrix:0.08,galaxy:0.12,electric:0.35,ink:0.04,rainbow:0.14};
+  ctx.fillStyle = `rgba(8,8,8,${fades[mode]||0.15})`;
+  ctx.fillRect(0,0,W,H);
+
+  drawTrailLine();
+  particles = particles.filter(p => p.life>0);
+  particles.forEach(p => {
+    drawParticle(p);
+    p.x += p.vx; p.y += p.vy;
+    p.life -= p.decay;
+    if(mode==='fire') { p.vy *= 0.97; p.size *= 0.97; }
+    if(mode==='galaxy') { p.vx *= 0.99; p.vy *= 0.99; }
+    if(mode==='ink') { p.vx *= 0.9; p.vy *= 0.95; }
+  });
+  drawCursor();
+  if(!active && trail.length>0) trail.shift();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

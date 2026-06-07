@@ -1,69 +1,97 @@
 import React from 'react';
-import wireframeSphere from '../assets/wireframe-sphere.png';
+import portrait from '../assets/portrait.png';
 import timelineData from '../json/about_timeline.json';
 import skillsData from '../json/skills.json';
 
 const AboutSection = () => {
-  // Quadruple the row content for a truly seamless infinite loop on any screen width
-  const full_row1 = [...skillsData.row1, ...skillsData.row1, ...skillsData.row1, ...skillsData.row1];
-  const full_row2 = [...skillsData.row2, ...skillsData.row2, ...skillsData.row2, ...skillsData.row2];
+  // Combine all skills for a single continuous marquee track
+  const allSkills = [...skillsData.row1, ...skillsData.row2];
+  
+  // Triplicate the list of skills to ensure seamless continuous scrolling without blank spaces
+  const duplicatedSkills = [...allSkills, ...allSkills, ...allSkills];
 
   return (
     <section className="about-section" id="about">
-      <div className="about-header-top">
-        <div className="badge-small">Our Story</div>
-        <h2 className="about-title">
-          Our Existence <span className="text-gradient">Explained</span>
-        </h2>
+      {/* Centered Section Header matching Project Section style */}
+      <div className="about-header">
+        <h2 className="about-section-title">About Me</h2>
+        <p className="about-section-subtitle">
+          My background, academic journey, tech stack, and path as a developer.
+        </p>
       </div>
 
-      <div className="about-container">
-        <div className="about-left">
-          <div className="about-visual">
-            <img src={wireframeSphere} alt="Wireframe Sphere" className="sphere-img" />
-          </div>
-
-        </div>
-
-        <div className="about-right">
-          <div className="about-text">
-            <p>
-              I am a dedicated <strong>Full-Stack Developer</strong> with a passion for crafting user-friendly and scalable web applications. My journey in technology began during my <strong>BSc in Computer Science</strong> (graduated 2023), where I developed a strong foundation in core programming concepts.
-            </p>
-            <p>
-              Currently, I am pursuing my <strong>Master of Computer Applications (MCA)</strong> at Hindusthan College of Arts and Science, maintaining a high academic standard with a <strong>91% GPA</strong>. This academic rigor complements my hands-on experience in building modern web solutions.
-            </p>
-            <p>
-              My expertise lies in the <strong>MERN stack</strong> (MongoDB, Express.js, React, Node.js), but I am also proficient in C, C++, and various design tools like <strong>Figma and Adobe XD</strong>. I believe in writing clean, maintainable code that solves real-world problems.
-            </p>
-            <p>
-              Whether it's developing secure banking systems or dynamic e-commerce platforms, I focus on delivering <strong>high-performance software</strong> that provides an exceptional user experience while adhering to the latest industry standards.
-            </p>
+      <div className="about-bento-grid">
+        {/* Profile Picture Card - Left column */}
+        <div className="about-bento-card about-profile-card">
+          <div className="about-photo-wrapper">
+            <img src={portrait} alt="Prakash R" className="about-photo" />
+            <div className="about-work-badge">
+              <span className="work-dot"></span>
+              AVAILABLE FOR WORK
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Skills Marquee - Row 1 */}
-      <div className="skills-marquee">
-        <div className="marquee-content">
-          {full_row1.map((skill, index) => (
-            <div key={index} className="skill-item icon-text">
-              <span className="skill-icon-mini">{skill.icon}</span>
-              <span className="skill-name">{skill.name}</span>
+        {/* Bio Content Card (Description) - Right column */}
+        <div className="about-bento-card about-content-card">
+          <h2 className="about-name">Prakash R</h2>
+          <h3 className="about-role">Full-Stack Developer</h3>
+          
+          <div className="about-desc">
+            <p>
+              I am a dedicated Full-Stack Developer specializing in the MERN stack (MongoDB, Express.js, React, Node.js), with a passion for crafting premium, user-friendly, and scalable web solutions.
+            </p>
+            <p>
+              Currently, I am pursuing my Master of Computer Applications (MCA) at Hindusthan College of Arts and Science with a 91% GPA, combining solid academic principles with hands-on development experience.
+            </p>
+          </div>
+
+          {/* Quick Info Grid to fill up empty space */}
+          <div className="about-info-grid">
+            <div className="info-item">
+              <span className="info-label">Education</span>
+              <span className="info-value">MCA (91% GPA)</span>
             </div>
-          ))}
+            <div className="info-item">
+              <span className="info-label">Location</span>
+              <span className="info-value">Coimbatore, India</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Experience</span>
+              <span className="info-value">Full-Stack Dev</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Freelance</span>
+              <span className="info-value">Available</span>
+            </div>
+          </div>
+
+          <div className="about-content-actions">
+            <button className="btn-collaborate" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+              Let's Collaborate
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Skills Marquee - Row 2 (Reverse) */}
-      <div className="skills-marquee row-reverse">
-        <div className="marquee-content">
-          {full_row2.map((skill, index) => (
-            <div key={index} className="skill-item icon-text">
-              <span className="skill-icon-mini">{skill.icon}</span>
-              <span className="skill-name">{skill.name}</span>
+        {/* Scrolling Skills Marquee Card - Spans full width */}
+        <div className="about-bento-card about-skills-card">
+          <div className="skills-label-wrapper">
+            <span className="skills-card-label">Skills</span>
+          </div>
+          <div className="skills-marquee-container">
+            <div className="skills-marquee-track">
+              {duplicatedSkills.map((skill, index) => (
+                <div key={index} className="skill-btn-badge">
+                  <span className="skill-icon">{skill.icon}</span>
+                  <span className="skill-name">{skill.name}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 

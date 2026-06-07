@@ -1,33 +1,17 @@
 {
-  "stats": [
-    { "value": "91%", "label": "GPA in MCA" },
-    { "value": "4+", "label": "Full-Stack Projects" },
-    { "value": "2023", "label": "Graduated BSc CS" }
-  ],
-  "milestones": [
+  "achievements": [
     {
-      "year": "2023",
-      "title": "MCA Inception",
+      "year": "2026",
+      "title": "Hackthon Winners",
       "desc": "Started Master of Computer Applications at Hindusthan College of Arts and Science.",
-      "imgKey": "milestone"
-    },
-    {
-      "year": "2024",
-      "title": "Advanced HTML Certified",
-      "desc": "Demonstrated expert knowledge in structuring complex web applications.",
-      "imgKey": "milestone"
-    },
-    {
-      "year": "2024",
-      "title": "JS Algorithms Certified",
-      "desc": "Mastered complex JavaScript algorithms and data structures through freeCodeCamp.",
-      "imgKey": "milestone"
-    },
-    {
-      "year": "Active",
-      "title": "MERN Stack Mastery",
-      "desc": "Consistently building and scaling full-stack applications with MongoDB, Express, React, and Node.js.",
-      "imgKey": "milestone"
+      "imgKey": "ach_hackthon_1",
+      "imgKeys": [
+        "ach_hackthon_1",
+        "ach_hackthon_2",
+        "ach_hackthon_3"
+      ],
+      "date": "Feb 05, 2026",
+      "tags": ["hackthon", "MCA"]
     }
   ]
 }

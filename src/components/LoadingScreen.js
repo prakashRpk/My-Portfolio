@@ -1,48 +1,49 @@
 import React, { useState, useEffect } from 'react';
 
 const LoadingScreen = ({ onFinished }) => {
-  const [progress, setProgress] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setFadeOut(true), 500);
-          setTimeout(() => onFinished(), 1200);
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 15) + 5;
-      });
-    }, 150);
+    const fadeTimer = setTimeout(() => {
+      setFadeOut(true);
+    }, 2400); // Let the 2.2s animation complete, then wait 200ms
 
-    return () => clearInterval(interval);
+    const finishTimer = setTimeout(() => {
+      onFinished();
+    }, 3200); // 2.4s + 800ms fadeout transition
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(finishTimer);
+    };
   }, [onFinished]);
 
   return (
     <div className={`loading-screen ${fadeOut ? 'fade-out' : ''}`}>
-      <div className="loading-content">
-        <div className="loading-logo">
-          {/* Stylized Terminal Logo */}
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M4 17l6-6-6-6M12 19h8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        
-        <div className="loading-bar-container">
-          <div className="loading-bar" style={{ width: `${Math.min(progress, 100)}%` }}></div>
-        </div>
-
-        <div className="loading-info">
-          <span className="loading-text">SYSTEM INITIALIZING</span>
-          <span className="loading-percentage">{Math.min(progress, 100)}%</span>
-        </div>
-      </div>
-
-      <div className="loading-footer">
-        <span>© 2024 PRAKASH R DEV</span>
-        <span>TERMINAL v1.0.4</span>
+      <div className="loading-container">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 3508 2481"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          xmlSpace="preserve"
+          style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: 2 }}
+        >
+          <text
+            x="1754"
+            y="1240"
+            textAnchor="middle"
+            dominantBaseline="central"
+            style={{
+              fontFamily: "'Fineday - style one non-connect', 'Fineday - Style One Non-Connect', 'Fineday-StyleOne', 'Fineday', sans-serif",
+              fontSize: '720px'
+            }}
+          >
+            Welcome
+          </text>
+        </svg>
       </div>
     </div>
   );

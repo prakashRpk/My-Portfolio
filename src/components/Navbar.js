@@ -3,6 +3,7 @@ import portrait from '../assets/portrait.png';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,24 +15,19 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`navbar-container ${scrolled ? 'is-scrolled' : ''}`}>
+    <nav className={`navbar-container ${scrolled ? 'is-scrolled' : ''} ${isOpen ? 'menu-open' : ''}`}>
       <div className="navbar-pill">
         <div className="nav-left">
-          <div className="nav-logo">
-            {/* Logo SVG */}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M2 12h20"></path>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-          </div>
+          <a href="#" className="nav-logo-link">
+            <span className="nav-logo-text">My Portfolio</span>
+          </a>
         </div>
         
-        <div className="nav-links">
-          <a href="#work" className="nav-link">Work</a>
-          <a href="#about" className="nav-link">About</a>
-          <a href="#playground" className="nav-link">Playground</a>
-          <a href="#resource" className="nav-link">Resource</a>
+        <div className={`nav-links ${isOpen ? 'show' : ''}`}>
+          <a href="#work" className="nav-link" onClick={() => setIsOpen(false)}>Work</a>
+          <a href="#about" className="nav-link" onClick={() => setIsOpen(false)}>About</a>
+          <a href="#achievements" className="nav-link" onClick={() => setIsOpen(false)}>Achievements</a>
+          <a href="#contact" className="nav-link" onClick={() => setIsOpen(false)}>Contact</a>
         </div>
 
         <div className="nav-right">
@@ -44,6 +40,16 @@ const Navbar = () => {
               <span className="nav-profile-role">Full-Stack Developer</span>
             </div>
           </div>
+
+          <button 
+            className={`hamburger-btn ${isOpen ? 'active' : ''}`}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </button>
         </div>
       </div>
     </nav>

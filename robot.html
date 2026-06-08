@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive 3D Robot Mascot</title>
+<!-- Outfit font from Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg-dark: #050811;
+    --primary-blue: #172d63;
+    --cyan-accent: #29abe2;
+    --cyan-light: #5bc0e5;
+    --reactor-glow: rgba(41, 171, 226, 0.4);
+    --bubble-bg: rgba(255, 255, 255, 0.95);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-dark);
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+    background-size: 50px 50px;
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+/* Background Ambient Orbs */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 1;
+    transition: background 1s ease;
+}
+
+.orb-left {
+    width: 450px;
+    height: 450px;
+    top: 15%;
+    left: 10%;
+    background: radial-gradient(circle, rgba(41, 171, 226, 0.08) 0%, transparent 70%);
+}
+
+.orb-right {
+    width: 500px;
+    height: 500px;
+    bottom: 15%;
+    right: 10%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+}
+
+/* Starry Parallax Dots */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+/* Back to Portfolio Link */
+.btn-back {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Scene Wrapper */
+.scene-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Speech Bubble */
+.speech-bubble {
+    position: absolute;
+    top: -45px;
+    right: -130px;
+    background: var(--bubble-bg);
+    border: 3px solid var(--cyan-accent);
+    border-radius: 20px;
+    padding: 14px 24px;
+    color: var(--primary-blue);
+    font-size: 1.25rem;
+    font-weight: 800;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    max-width: 250px;
+    min-width: 200px;
+    opacity: 0;
+    transform: scale(0.7) translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 50;
+    transform-origin: bottom left;
+}
+
+.speech-bubble.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -13px;
+    left: 45px;
+    width: 20px;
+    height: 20px;
+    background: var(--bubble-bg);
+    border-bottom: 3px solid var(--cyan-accent);
+    border-right: 3px solid var(--cyan-accent);
+    transform: rotate(45deg);
+}
+
+/* Robot Container */
+.robot {
+    width: 440px;
+    max-width: 90vw;
+    transform-style: preserve-3d;
+    will-change: transform;
+    position: relative;
+    cursor: grab;
+}
+
+.robot:active {
+    cursor: grabbing;
+}
+
+/* SVG Rendering */
+.robot svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(15px 15px 25px rgba(0,0,0,0.5));
+    transition: filter .3s ease;
+}
+
+/* Dynamic Core Pulse Glows */
+.robot:hover svg {
+    filter:
+        drop-shadow(15px 15px 25px rgba(0,0,0,0.5))
+        drop-shadow(0 0 25px rgba(41,171,226,0.35));
+}
+
+/* Supercharged Mode Glows */
+.robot.supercharged svg {
+    filter:
+        drop-shadow(15px 15px 25px rgba(0,0,0,0.5))
+        drop-shadow(0 0 35px rgba(239, 68, 68, 0.5))
+        drop-shadow(0 0 60px rgba(245, 158, 11, 0.3));
+}
+
+/* Blinking Eyes (CSS keyframes) */
+.eye-group {
+    animation: eyeBlink 5s infinite ease-in-out;
+}
+
+.eye-pupil {
+    transition: transform 0.08s linear;
+}
+
+/* Chest Reactor core animations */
+.core-ring-inner {
+    transition: fill 0.3s ease, filter 0.3s ease;
+    animation: corePulse 2s infinite ease-in-out;
+}
+
+.core-ring-outer {
+    transform-origin: 300px 470px;
+    transition: stroke 0.3s ease;
+}
+
+.robot.supercharged .core-ring-outer {
+    animation: spinRing 1s infinite linear;
+}
+
+/* Interactive Floating Shadow */
+.floor-shadow {
+    width: 220px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    margin-top: 15px;
+    filter: blur(8px);
+    z-index: 5;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+/* KEYFRAME ANIMATIONS */
+@keyframes eyeBlink {
+    0%, 92%, 96%, 100% {
+        transform: scaleY(1);
+    }
+    94% {
+        transform: scaleY(0.05);
+    }
+}
+
+@keyframes corePulse {
+    0%, 100% {
+        opacity: 0.85;
+    }
+    50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--cyan-accent));
+    }
+}
+
+@keyframes spinRing {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Toggle Switch Styling */
+.controls-container {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    z-index: 100;
+}
+
+.btn-control {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-control:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-control.active {
+    background: var(--cyan-accent);
+    border-color: var(--cyan-light);
+    color: #050811;
+    box-shadow: 0 0 15px rgba(41, 171, 226, 0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="glow-orb orb-left"></div>
+<div class="glow-orb orb-right"></div>
+
+<!-- Parallax Star Layer -->
+<div class="stars" id="star-layer"></div>
+
+<a href="/" class="btn-back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Back to Portfolio
+</a>
+
+<div class="scene-container">
+    <!-- Speech Bubble -->
+    <div class="speech-bubble" id="bubble">
+        Hi there! 👋
+    </div>
+
+    <!-- 3D Parallax Robot Wrapper -->
+    <div class="robot" id="robot-mascot">
+
+        <svg viewBox="0 0 600 700">
+            <!-- Antennas -->
+            <g fill="#172d63">
+                <path d="M180 145 Q140 60 220 40 Q190 60 190 145Z"/>
+                <path d="M420 145 Q460 60 380 40 Q410 60 410 145Z"/>
+
+                <ellipse cx="220" cy="40" rx="25" ry="15"/>
+                <ellipse cx="380" cy="40" rx="25" ry="15"/>
+            </g>
+
+            <!-- Head -->
+            <ellipse cx="300" cy="220" rx="185" ry="155" fill="#d9d9e8"/>
+
+            <!-- Top Cap -->
+            <path d="M240 95 Q300 75 360 95 L340 135 L260 135 Z" fill="#29abe2" class="head-cap-light"/>
+            <path d="M255 110 Q300 95 345 110 L330 135 L270 135 Z" fill="#2947a3" class="head-cap-dark"/>
+
+            <!-- Ear Pads -->
+            <path d="M105 175 Q80 210 90 260 L130 280 Q140 220 135 175Z" fill="#29abe2" class="ear-pad-l"/>
+            <path d="M495 175 Q520 210 510 260 L470 280 Q460 220 465 175Z" fill="#29abe2" class="ear-pad-r"/>
+            <path d="M110 230 L135 220 L135 290 L105 280Z" fill="#2947a3"/>
+            <path d="M490 230 L465 220 L465 290 L495 280Z" fill="#2947a3"/>
+
+            <!-- Face Screen -->
+            <rect x="170" y="145" width="260" height="170" rx="85" fill="#343d93" class="face-bg"/>
+
+            <!-- Eyes -->
+            <g class="eye-group eye-left" style="transform-origin: 240px 245px;">
+                <g class="eye-pupil">
+                    <rect x="220" y="200" width="40" height="90" rx="20" fill="#fff"/>
+                    <rect x="232" y="210" width="24" height="75" rx="12" fill="#5bc0e5" class="eye-color"/>
+                    <circle cx="240" cy="225" r="4.5" fill="#fff"/>
+                </g>
+            </g>
+
+            <g class="eye-group eye-right" style="transform-origin: 360px 245px;">
+                <g class="eye-pupil">
+                    <rect x="340" y="200" width="40" height="90" rx="20" fill="#fff"/>
+                    <rect x="352" y="210" width="24" height="75" rx="12" fill="#5bc0e5" class="eye-color"/>
+                    <circle cx="360" cy="225" r="4.5" fill="#fff"/>
+                </g>
+            </g>
+
+            <!-- Neck -->
+            <ellipse cx="300" cy="365" rx="115" ry="28" fill="#9ea0d2"/>
+
+            <!-- Shoulders -->
+            <ellipse cx="165" cy="430" rx="65" ry="70" fill="#172d63"/>
+            <ellipse cx="435" cy="430" rx="65" ry="70" fill="#172d63"/>
+
+            <!-- Body Torso -->
+            <path d="M180 360 Q300 330 420 360 Q430 520 300 620 Q170 520 180 360" fill="#d9d9e8"/>
+
+            <!-- Chest Line -->
+            <path d="M175 470 Q300 510 425 470" stroke="#343d93" stroke-width="6" fill="none"/>
+
+            <!-- Interactive Core Reactor -->
+            <g id="core-reactor" style="cursor: pointer;">
+                <circle cx="300" cy="470" r="45" fill="#1f9ad1" class="core-ring-inner"/>
+                <path d="M245 470 A55 55 0 0 0 355 470" stroke="#2947a3" stroke-width="12" fill="none" class="core-ring-outer"/>
+            </g>
+
+            <!-- Arms -->
+            <g fill="#d9d9e8" class="arms">
+                <path d="M110 460 Q90 530 120 580 Q150 610 170 540 Q180 500 155 450"/>
+                <path d="M490 460 Q510 530 480 580 Q450 610 430 540 Q420 500 445 450"/>
+            </g>
+
+            <!-- Arm Lines -->
+            <path d="M105 505 Q140 500 170 515" stroke="#343d93" stroke-width="5" fill="none"/>
+            <path d="M495 505 Q460 500 430 515" stroke="#343d93" stroke-width="5" fill="none"/>
+        </svg>
+
+    </div>
+
+    <!-- Interactive Floor Shadow -->
+    <div class="floor-shadow" id="shadow"></div>
+
+    <!-- UI Controls -->
+    <div class="controls-container">
+        <button class="btn-control" id="btn-sound">🔊 Sound On</button>
+        <button class="btn-control" id="btn-power">⚡ Supercharge</button>
+    </div>
+</div>
+
+<script>
+const robot = document.getElementById('robot-mascot');
+const pupils = document.querySelectorAll('.eye-pupil');
+const shadow = document.getElementById('shadow');
+const bubble = document.getElementById('bubble');
+const btnSound = document.getElementById('btn-sound');
+const btnPower = document.getElementById('btn-power');
+const coreReactor = document.getElementById('core-reactor');
+const starLayer = document.getElementById('star-layer');
+
+let mouseX = 0, mouseY = 0;
+let currentX = 0, currentY = 0;
+let isSupercharged = false;
+let soundEnabled = false;
+let starData = [];
+
+// Web Audio synthesizer
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSynth(type) {
+    if (!soundEnabled) return;
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    if (type === 'hover') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+    } else if (type === 'click') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1800, audioCtx.currentTime + 0.6);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+    } else if (type === 'overload') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(1500, audioCtx.currentTime + 0.8);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.8);
+    }
+}
+
+// Generate stars
+function initStars() {
+    for (let i = 0; i < 60; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 1;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const speedFactor = size * 0.05;
+        
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${x}px`;
+        star.style.top = `${y}px`;
+        
+        starLayer.appendChild(star);
+        starData.push({ element: star, initialX: x, initialY: y, factor: speedFactor });
+    }
+}
+initStars();
+
+// Speech bubble system
+let speechTimeout;
+const bubbleMessages = [
+    "Move your mouse, I'll follow! 👀",
+    "Design system: Pure SVG & CSS variables! 🎨",
+    "Did you click my reactor core yet? ⚡",
+    "Hover over me to tilt me in 3D! 🔄",
+    "Click the Back button to view the portfolio. 💻",
+    "I can blink, look, and glow! 🤖"
+];
+
+function triggerSpeech(message, duration = 3000) {
+    clearTimeout(speechTimeout);
+    bubble.textContent = message;
+    bubble.classList.add('active');
+    
+    speechTimeout = setTimeout(() => {
+        bubble.classList.remove('active');
+    }, duration);
+}
+
+// Auto speech trigger
+setInterval(() => {
+    if (!bubble.classList.contains('active') && Math.random() > 0.4) {
+        const randomMsg = bubbleMessages[Math.floor(Math.random() * bubbleMessages.length)];
+        triggerSpeech(randomMsg);
+    }
+}, 9000);
+
+// Initialize with a welcome message
+setTimeout(() => {
+    triggerSpeech("Welcome! Try moving your mouse around! 👋", 4000);
+}, 8000);
+
+// Mouse interactions
+document.addEventListener('mousemove', (e) => {
+    // Parallax Star tracking
+    const moveX = (e.clientX - window.innerWidth / 2);
+    const moveY = (e.clientY - window.innerHeight / 2);
+    
+    starData.forEach(star => {
+        star.element.style.transform = `translate(${moveX * star.factor}px, ${moveY * star.factor}px)`;
+    });
+
+    // 3D Tilt calculation
+    mouseX = ((e.clientX / window.innerWidth) - 0.5) * (isSupercharged ? 30 : 18);
+    mouseY = ((e.clientY / window.innerHeight) - 0.5) * (isSupercharged ? -30 : -18);
+
+    // Eye pupil coordinates tracking
+    const eyeX = ((e.clientX / window.innerWidth) - 0.5) * 14;
+    const eyeY = ((e.clientY / window.innerHeight) - 0.5) * 14;
+
+    pupils.forEach(pupil => {
+        pupil.style.transform = `translate(${eyeX}px, ${eyeY}px)`;
+    });
+});
+
+// Sound enable toggler
+btnSound.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    btnSound.classList.toggle('active', soundEnabled);
+    btnSound.textContent = soundEnabled ? "🔊 Sound On" : "🔇 Sound Off";
+    if (soundEnabled) playSynth('hover');
+});
+
+// Reactor charge function
+function toggleSupercharge() {
+    isSupercharged = !isSupercharged;
+    robot.classList.toggle('supercharged', isSupercharged);
+    btnPower.classList.toggle('active', isSupercharged);
+    
+    const colors = document.querySelectorAll('.eye-color');
+    const glowOrbs = document.querySelectorAll('.glow-orb');
+    const coreRingInner = document.querySelector('.core-ring-inner');
+    const coreRingOuter = document.querySelector('.core-ring-outer');
+    
+    if (isSupercharged) {
+        playSynth('overload');
+        triggerSpeech("⚡ SUPERCHARGED MODE ACTIVE! ⚡", 4000);
+        
+        colors.forEach(col => col.setAttribute('fill', '#ff3366'));
+        coreRingInner.setAttribute('fill', '#ef4444');
+        coreRingOuter.setAttribute('stroke', '#f59e0b');
+        
+        glowOrbs[0].style.background = 'radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%)';
+        glowOrbs[1].style.background = 'radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%)';
+    } else {
+        playSynth('click');
+        triggerSpeech("Core reactor stabilized. 🔋", 3000);
+        
+        colors.forEach(col => col.setAttribute('fill', '#5bc0e5'));
+        coreRingInner.setAttribute('fill', '#1f9ad1');
+        coreRingOuter.setAttribute('stroke', '#2947a3');
+        
+        glowOrbs[0].style.background = 'radial-gradient(circle, rgba(41, 171, 226, 0.08) 0%, transparent 70%)';
+        glowOrbs[1].style.background = 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)';
+    }
+}
+
+btnPower.addEventListener('click', toggleSupercharge);
+coreReactor.addEventListener('click', toggleSupercharge);
+
+// Sound feedback on mouse hover robot
+robot.addEventListener('mouseenter', () => {
+    playSynth('hover');
+    if (!isSupercharged && Math.random() > 0.6) {
+        triggerSpeech("Hey, that tickles! 😄");
+    }
+});
+
+// Main animation loop
+function animate() {
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
+
+    const speedMod = isSupercharged ? 0.005 : 0.002;
+    const floatMod = isSupercharged ? 25 : 12;
+    
+    const floatY = Math.sin(Date.now() * speedMod) * floatMod;
+
+    // Easing 3D transform rotation & floating translation
+    robot.style.transform = `
+        translateY(${floatY}px)
+        rotateY(${currentX}deg)
+        rotateX(${currentY}deg)
+    `;
+
+    // Floor shadow sizing dynamic scale
+    const shadowScale = 1 - (floatY / 150);
+    const shadowOpacity = 0.6 - (floatY / 80);
+    shadow.style.transform = `scale(${shadowScale})`;
+    shadow.style.opacity = Math.max(0.2, Math.min(0.8, shadowOpacity));
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// Handle window resizing to keep stars relative
+window.addEventListener('resize', () => {
+    starLayer.innerHTML = '';
+    starData = [];
+    initStars();
+});
+</script>
+
+</body>
+</html>

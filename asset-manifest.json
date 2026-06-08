@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/My-Portfolio/static/css/main.31a4612b.css",
+    "main.js": "/My-Portfolio/static/js/main.de30893e.js",
+    "static/js/933.ddee3e5b.chunk.js": "/My-Portfolio/static/js/933.ddee3e5b.chunk.js",
+    "static/media/ach_hackthon_3.png": "/My-Portfolio/static/media/ach_hackthon_3.1f72ec13f66c1b0cb565.png",
+    "static/media/ach_mca.png": "/My-Portfolio/static/media/ach_mca.d96b06a914dd298dc729.png",
+    "static/media/ach_js.png": "/My-Portfolio/static/media/ach_js.90d5cd6d216260fcf818.png",
+    "static/media/ach_mern.png": "/My-Portfolio/static/media/ach_mern.90405c53d37841baef91.png",
+    "static/media/ach_html.png": "/My-Portfolio/static/media/ach_html.a7a047383908eda3dd29.png",
+    "static/media/ach_hackthon_1.png": "/My-Portfolio/static/media/ach_hackthon_1.b1864c20f6616b6da50b.png",
+    "static/media/p2.png": "/My-Portfolio/static/media/p2.acaccfaeb2ec15a2234f.png",
+    "static/media/p1.png": "/My-Portfolio/static/media/p1.2e9de985534fadd750b5.png",
+    "static/media/p3.png": "/My-Portfolio/static/media/p3.85b93cbd7956776641a3.png",
+    "static/media/ach_hackthon_2.png": "/My-Portfolio/static/media/ach_hackthon_2.461daa2e2546eb82a2d2.png",
+    "static/media/portrait.png": "/My-Portfolio/static/media/portrait.946c923f9d1e698557bc.png",
+    "static/media/chatbot-bot.png": "/My-Portfolio/static/media/chatbot-bot.08373a1a2be36f3bd54f.png",
+    "index.html": "/My-Portfolio/index.html",
+    "main.31a4612b.css.map": "/My-Portfolio/static/css/main.31a4612b.css.map",
+    "main.de30893e.js.map": "/My-Portfolio/static/js/main.de30893e.js.map",
+    "933.ddee3e5b.chunk.js.map": "/My-Portfolio/static/js/933.ddee3e5b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.31a4612b.css",
+    "static/js/main.de30893e.js"
+  ]
+}

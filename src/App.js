@@ -8,7 +8,6 @@ import AchievementSection from './components/AchievementSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
-import ChatbotWidget from './components/ChatbotWidget';
 import CustomCursor from './components/CustomCursor';
 import MouseTrail from './components/MouseTrail';
 
@@ -32,7 +31,6 @@ function App() {
           <AchievementSection />
           <ContactSection />
           <Footer />
-          <ChatbotWidget />
         </>
       )}
     </>

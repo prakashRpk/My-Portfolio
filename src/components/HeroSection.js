@@ -1,7 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import heroPerson from '../assets/portrait.png';
+import RobotMascot from './RobotMascot';
 
 const HeroSection = () => {
+  // Track cursor position to make hero robot mascot eyes look at the mouse
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const pupils = document.querySelectorAll('.hero-floating-robot .mascot-pupil');
+      pupils.forEach(pupil => {
+        const rect = pupil.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+
+        const eyeCenterX = rect.left + rect.width / 2;
+        const eyeCenterY = rect.top + rect.height / 2;
+
+        const dx = e.clientX - eyeCenterX;
+        const dy = e.clientY - eyeCenterY;
+
+        const angle = Math.atan2(dy, dx);
+        // Maximum look offset capped at 8px
+        const distance = Math.min(8, Math.hypot(dx, dy) / 40);
+
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        pupil.style.transform = `translate(${tx}px, ${ty}px)`;
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   return (
     <main className="main-content hero-main">
       <div className="hero-grid">
@@ -79,6 +111,11 @@ const HeroSection = () => {
                 <span className="rating-num">91% Score</span>
                 <span className="reviews-count">MCA Academic GPA</span>
               </div>
+            </div>
+
+            {/* Floating Interactive Robot Mascot */}
+            <div className="hero-floating-robot clickable" title="Prakash's AI Mascot">
+              <RobotMascot className="hero-robot-mascot" />
             </div>
 
             {/* Floating Projects badge */}

@@ -1,38 +1,52 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import heroPerson from '../assets/portrait.png';
-import RobotMascot from './RobotMascot';
 
-const HeroSection = () => {
-  // Track cursor position to make hero robot mascot eyes look at the mouse
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const pupils = document.querySelectorAll('.hero-floating-robot .mascot-pupil');
-      pupils.forEach(pupil => {
-        const rect = pupil.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
+const HeroSection = ({ onConnectClick }) => {
+  // Initialize like state from localStorage
+  const [likesCount, setLikesCount] = useState(() => {
+    const savedCount = localStorage.getItem('hero_likes_count');
+    return savedCount ? parseInt(savedCount, 10) : 0; // Starting count is 0
+  });
+  
+  const [hasLiked, setHasLiked] = useState(() => {
+    return localStorage.getItem('hero_has_liked') === 'true';
+  });
 
-        const eyeCenterX = rect.left + rect.width / 2;
-        const eyeCenterY = rect.top + rect.height / 2;
+  const [shake, setShake] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hearts, setHearts] = useState([]);
 
-        const dx = e.clientX - eyeCenterX;
-        const dy = e.clientY - eyeCenterY;
+  const handleLike = () => {
+    if (hasLiked) {
+      // Trigger wiggle animation and show tooltip since already liked
+      setShake(true);
+      setShowTooltip(true);
+      setTimeout(() => setShake(false), 500);
+      setTimeout(() => setShowTooltip(false), 2000);
+      return;
+    }
 
-        const angle = Math.atan2(dy, dx);
-        // Maximum look offset capped at 8px
-        const distance = Math.min(8, Math.hypot(dx, dy) / 40);
+    // Increment count & persist
+    const newCount = likesCount + 1;
+    setLikesCount(newCount);
+    setHasLiked(true);
+    localStorage.setItem('hero_likes_count', newCount.toString());
+    localStorage.setItem('hero_has_liked', 'true');
 
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
+    // Spawn 6 staggered floating heart particles
+    const newHearts = Array.from({ length: 6 }).map((_, index) => ({
+      id: Date.now() + index,
+      tx: (Math.random() - 0.5) * 80 + 'px', // Random horizontal drift
+      delay: index * 0.1 + 's', // Staggered animations
+      size: Math.random() * 12 + 12 + 'px', // Random sizes between 12px and 24px
+    }));
+    setHearts(newHearts);
 
-        pupil.style.transform = `translate(${tx}px, ${ty}px)`;
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
+    // Clean up hearts after animation completes
+    setTimeout(() => {
+      setHearts([]);
+    }, 1500);
+  };
 
   return (
     <main className="main-content hero-main">
@@ -49,8 +63,12 @@ const HeroSection = () => {
 
           <form className="consulting-form" onSubmit={(e) => {
             e.preventDefault();
-            const email = e.target.querySelector('.consulting-input').value;
-            window.location.href = `mailto:prakashrpk.dev@gmail.com?subject=Portfolio%20Inquiry&body=Hi%20Prakash,%20I%27d%20like%20to%20connect%20with%20you.%20My%20email%20is%20${email}`;
+            const inputEl = e.target.querySelector('.consulting-input');
+            const email = inputEl.value.trim();
+            if (email && onConnectClick) {
+              onConnectClick(email);
+              inputEl.value = '';
+            }
           }}>
             <input type="email" placeholder="Enter your email" className="consulting-input" required />
             <button type="submit" className="consulting-btn">Let's Connect</button>
@@ -113,23 +131,69 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* Floating Interactive Robot Mascot */}
-            <div className="hero-floating-robot clickable" title="Prakash's AI Mascot">
-              <RobotMascot className="hero-robot-mascot" />
+            {/* Floating Interactive Like Widget */}
+            <div 
+              className={`hero-like-widget ${hasLiked ? 'has-liked' : ''} ${shake ? 'shake' : ''}`}
+              onClick={handleLike}
+              title={hasLiked ? "You liked this!" : "Like Prakash's Portfolio"}
+            >
+              {showTooltip && (
+                <div className="like-tooltip">
+                  Already liked! Thank you! ❤️
+                </div>
+              )}
+
+              <div className="like-icon-container">
+                <svg className="like-heart-svg" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+
+                {/* Floating Heart Particles */}
+                {hearts.map(heart => (
+                  <svg 
+                    key={heart.id} 
+                    className="floating-heart" 
+                    style={{ 
+                      '--tx': heart.tx, 
+                      animationDelay: heart.delay,
+                      width: heart.size,
+                      height: heart.size,
+                      fill: '#ff4b4b',
+                      left: 'calc(50% - 10px)',
+                      top: 'calc(50% - 10px)'
+                    }} 
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                ))}
+              </div>
+
+              <div className="like-count-display">
+                <span className="like-number">{likesCount}</span>
+                <span className="like-label">{hasLiked ? 'Liked' : 'Likes'}</span>
+              </div>
             </div>
 
-            {/* Floating Projects badge */}
-            <div className="floating-badge partner-badge">
-              <div className="partner-icon">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            {/* Floating View CV badge */}
+            <a 
+              href={process.env.PUBLIC_URL + "/resume.html"} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="floating-badge partner-badge cv-download-badge"
+              title="View Prakash's CV"
+            >
+              <div className="partner-icon cv-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
               </div>
               <div className="partner-text">
-                <span className="partner-title">4+ Projects</span>
-                <span className="partner-subtitle">Full-Stack Live</span>
+                <span className="partner-title">Curriculum Vitae</span>
+                <span className="partner-subtitle">View CV</span>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -138,3 +202,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+

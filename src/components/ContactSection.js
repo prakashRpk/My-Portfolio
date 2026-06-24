@@ -10,7 +10,7 @@ const ContactSection = () => {
           <span className="contact-badge-pill">Get In Touch</span>
           <h2 className="contact-main-title">Let's Connect & Build Something.</h2>
           <p className="contact-manual-reach">
-            Or just reach out manually to <a href="mailto:prakashrpk.dev@gmail.com">prakashrpk.dev@gmail.com</a>.
+            Or just reach out manually to <a href="mailto:mrprakash08112004@gmail.com">mrprakash08112004@gmail.com</a>.
           </p>
         </div>
 
@@ -27,7 +27,7 @@ const ContactSection = () => {
             </div>
             <h3>Email Support</h3>
             <p className="contact-col-desc">Drop an email for collaborations or opportunities.</p>
-            <a href="mailto:prakashrpk.dev@gmail.com" className="contact-col-link">prakashrpk.dev@gmail.com</a>
+            <a href="mailto:mrprakash08112004@gmail.com" className="contact-col-link">mrprakash08112004@gmail.com</a>
           </div>
 
           {/* GitHub Profile */}

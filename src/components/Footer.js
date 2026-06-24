@@ -70,7 +70,7 @@ const Footer = () => {
           <div className="footer-column">
             <h4>Quick Connect</h4>
             <ul>
-              <li><a href="mailto:prakashrpk.dev@gmail.com">prakashrpk.dev@gmail.com</a></li>
+              <li><a href="mailto:mrprakash08112004@gmail.com">mrprakash08112004@gmail.com</a></li>
               <li><a style={{ pointerEvents: 'none', cursor: 'default' }}>Coimbatore, Tamil Nadu</a></li>
               <li><a style={{ pointerEvents: 'none', cursor: 'default' }}>India</a></li>
             </ul>

@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import heroPerson from '../assets/portrait.png';
 
 const HeroSection = ({ onConnectClick }) => {
-  // Initialize like state from localStorage
-  const [likesCount, setLikesCount] = useState(() => {
-    const savedCount = localStorage.getItem('hero_likes_count');
-    return savedCount ? parseInt(savedCount, 10) : 0; // Starting count is 0
-  });
+  const [likesCount, setLikesCount] = useState(0);
   
   const [hasLiked, setHasLiked] = useState(() => {
     return localStorage.getItem('hero_has_liked') === 'true';
@@ -15,6 +11,25 @@ const HeroSection = ({ onConnectClick }) => {
   const [shake, setShake] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hearts, setHearts] = useState([]);
+
+  // Fetch likes from server on load
+  useEffect(() => {
+    fetch('http://localhost:5000/api/likes')
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.likes === 'number') {
+          setLikesCount(data.likes);
+          localStorage.setItem('hero_likes_count', data.likes.toString());
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching likes from server, using local fallback:', err);
+        const savedCount = localStorage.getItem('hero_likes_count');
+        if (savedCount) {
+          setLikesCount(parseInt(savedCount, 10));
+        }
+      });
+  }, []);
 
   const handleLike = () => {
     if (hasLiked) {
@@ -26,11 +41,28 @@ const HeroSection = ({ onConnectClick }) => {
       return;
     }
 
-    // Increment count & persist
-    const newCount = likesCount + 1;
-    setLikesCount(newCount);
+    // Call backend API to increment count
+    fetch('http://localhost:5000/api/likes/increment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.likes === 'number') {
+          setLikesCount(data.likes);
+          localStorage.setItem('hero_likes_count', data.likes.toString());
+        }
+      })
+      .catch(err => {
+        console.error('Error saving like to server, using local fallback:', err);
+        const newCount = likesCount + 1;
+        setLikesCount(newCount);
+        localStorage.setItem('hero_likes_count', newCount.toString());
+      });
+
     setHasLiked(true);
-    localStorage.setItem('hero_likes_count', newCount.toString());
     localStorage.setItem('hero_has_liked', 'true');
 
     // Spawn 6 staggered floating heart particles

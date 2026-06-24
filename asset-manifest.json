@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/My-Portfolio/static/css/main.31a4612b.css",
-    "main.js": "/My-Portfolio/static/js/main.de30893e.js",
+    "main.css": "/My-Portfolio/static/css/main.344c61a2.css",
+    "main.js": "/My-Portfolio/static/js/main.ebf25460.js",
     "static/js/933.ddee3e5b.chunk.js": "/My-Portfolio/static/js/933.ddee3e5b.chunk.js",
     "static/media/ach_hackthon_3.png": "/My-Portfolio/static/media/ach_hackthon_3.1f72ec13f66c1b0cb565.png",
     "static/media/ach_mca.png": "/My-Portfolio/static/media/ach_mca.d96b06a914dd298dc729.png",
@@ -16,12 +16,12 @@
     "static/media/portrait.png": "/My-Portfolio/static/media/portrait.946c923f9d1e698557bc.png",
     "static/media/chatbot-bot.png": "/My-Portfolio/static/media/chatbot-bot.08373a1a2be36f3bd54f.png",
     "index.html": "/My-Portfolio/index.html",
-    "main.31a4612b.css.map": "/My-Portfolio/static/css/main.31a4612b.css.map",
-    "main.de30893e.js.map": "/My-Portfolio/static/js/main.de30893e.js.map",
+    "main.344c61a2.css.map": "/My-Portfolio/static/css/main.344c61a2.css.map",
+    "main.ebf25460.js.map": "/My-Portfolio/static/js/main.ebf25460.js.map",
     "933.ddee3e5b.chunk.js.map": "/My-Portfolio/static/js/933.ddee3e5b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.31a4612b.css",
-    "static/js/main.de30893e.js"
+    "static/css/main.344c61a2.css",
+    "static/js/main.ebf25460.js"
   ]
 }
